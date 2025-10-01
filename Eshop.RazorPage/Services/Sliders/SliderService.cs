@@ -14,11 +14,12 @@ namespace Eshop.RazorPage.Services.Sliders
 
         public async Task<ApiResult> CreateSlider(CreateSliderCommand command)
         {
-            var formData = new MultipartFormDataContent();
-            if (command.ImageFile != null && command.ImageFile.IsImage())
-                formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
-            formData.Add(new StringContent(command.Link), "Link");
-            formData.Add(new StringContent(command.Title), "Title");
+            var formData = new MultipartFormDataContent
+            {
+                { new StringContent(command.Link), "Link" },
+                {new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName },
+                {new StringContent(command.Title), "Title"   }
+            };
 
             var result = await _client.PostAsync($"{ModuleName}", formData);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
@@ -32,14 +33,13 @@ namespace Eshop.RazorPage.Services.Sliders
 
         public async Task<ApiResult> EditSlider(EditSliderCommand command)
         {
-            var formData = new MultipartFormDataContent();
-            
-
-            if (command.ImageFile != null && command.ImageFile.IsImage())
-                formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
-            formData.Add(new StringContent(command.Link), "Link");
-            formData.Add(new StringContent(command.Id.ToString()), "Id");
-            formData.Add(new StringContent(command.Title), "Title");
+            var formData = new MultipartFormDataContent
+            {
+                { new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName },
+                { new StringContent(command.Link), "Link" },
+                { new StringContent(command.Id.ToString()), "Id" },
+                { new StringContent(command.Title), "Title" }
+            };
 
             var result = await _client.PutAsync($"{ModuleName}", formData);
             return await result.Content.ReadFromJsonAsync<ApiResult>();

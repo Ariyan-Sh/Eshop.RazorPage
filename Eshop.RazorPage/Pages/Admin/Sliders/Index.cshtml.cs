@@ -16,7 +16,7 @@ namespace Eshop.RazorPage.Pages.Admin.Sliders
         {
             _sliderService = sliderService;
         }
-        public List<SliderDto> Sliders { get; set; }
+        public List<SliderDto> Sliders { get; set; } = new List<SliderDto>();
         public async Task OnGet()
         {
             Sliders = await _sliderService.GetSliders();

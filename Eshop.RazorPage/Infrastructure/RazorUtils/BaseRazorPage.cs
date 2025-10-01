@@ -13,7 +13,7 @@ public class BaseRazorPage : PageModel
 {
     public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
     {
-        if (context.HandlerMethod.MethodInfo.Name == "OnPost")
+        if (context.HandlerMethod?.MethodInfo?.Name == "OnPost")
             if (context.ModelState.IsValid == false)
             {
                 var modelStateErrors = JoinErrors();
