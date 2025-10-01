@@ -14,43 +14,43 @@ namespace Eshop.RazorPage.Services.Categories
 
         public async Task<ApiResult> AddChildCategory(AddChildCategoryCommand command)
         {
-            var result = await _client.PostAsJsonAsync("category/AddChild", command);
+            var result = await _client.PostAsJsonAsync("api/category/AddChild", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> CreateCategory(CreateCategoryCommand command)
         {
-            var result = await _client.PostAsJsonAsync("category", command);
+            var result = await _client.PostAsJsonAsync("api/category", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> DeleteCategory(long categoryId)
         {
-            var result = await _client.DeleteAsync($"category/{categoryId}");
+            var result = await _client.DeleteAsync($"api/category/{categoryId}");
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> EditCategory(EditCategoryCommand command)
         {
-            var result = await _client.PutAsJsonAsync("category", command);
+            var result = await _client.PutAsJsonAsync("api/category", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<List<CategoryDto>> GetCategories()
         {
-            var result = await _client.GetFromJsonAsync<ApiResult<List<CategoryDto>>>($"category");
+            var result = await _client.GetFromJsonAsync<ApiResult<List<CategoryDto>>>($"api/category");
             return result?.Data;
         }
 
         public async Task<CategoryDto?> GetCategoryById(long categoryId)
         {
-            var result = await _client.GetFromJsonAsync<ApiResult<CategoryDto>>($"category/{categoryId}");
+            var result = await _client.GetFromJsonAsync<ApiResult<CategoryDto>>($"api/category/{categoryId}");
             return result?.Data;
         }
 
         public async Task<List<ChildCategoryDto>> GetChild(long parentCategoryId)
         {
-            var result = await _client.GetFromJsonAsync<ApiResult<List<ChildCategoryDto>>>($"category/getChild/{parentCategoryId}");
+            var result = await _client.GetFromJsonAsync<ApiResult<List<ChildCategoryDto>>>($"api/category/getChild/{parentCategoryId}");
             return result?.Data;
         }
     }

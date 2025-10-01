@@ -8,7 +8,7 @@ namespace Eshop.RazorPage.Services.Sellers
     public class SellerService : ISellerService
     {
         private readonly HttpClient _client;
-        private const string ModuleName = "seller";
+        private const string ModuleName = "api/seller";
         public SellerService(HttpClient client)
         {
             _client = client;

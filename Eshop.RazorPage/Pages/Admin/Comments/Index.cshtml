@@ -1,0 +1,100 @@
+﻿@page "{handler?}"
+@using Eshop.RazorPage.Infrastructure.Utils
+@using Eshop.RazorPage.Infrastructure
+@using Eshop.RazorPage.Models.Comments
+@model Eshop.RazorPage.Pages.Admin.Comments.IndexModel
+@{
+    ViewData["title"] = "مدیریت نظرات";
+    ViewData["selected"] = "comments_comment";
+}
+
+<form class="card shadow-lg " method="get">
+    <div class="card-header text-left">
+        <a asp-page="Index" class="btn btn-danger btn-sm">حذف فیلتر</a>
+        <button type="submit" class="btn btn-primary btn-sm">فیلتر</button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <label>شناسه کاربر</label>
+                <input type="number" asp-for="FilterParams.UserId" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label>شناسه محصول</label>
+                <input type="number" asp-for="FilterParams.ProductId" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label>از تاریخ</label>
+                <input type="date" asp-for="FilterParams.StartDate" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label>تا تاریخ</label>
+                <input type="date" asp-for="FilterParams.EndDate" class="form-control" />
+            </div>
+            <div class="col-md-3 mt-2">
+                <label>وضعیت</label>
+                <select asp-for="FilterParams.Status" class="form-control">
+                    <option value="">همه وضعیت‌ها</option>
+                    <option value="Pending">در انتظار</option>
+                    <option value="Accepted">تأیید شده</option>
+                    <option value="Rejected">رد شده</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="card mt-2">
+    <div class="card-body table-responsive p-0">
+        <table class="table table-bordered table-hover text-center">
+            <thead>
+                <tr>
+                    <th>شناسه</th>
+                    <th>کاربر</th>
+                    <th>محصول</th>
+                    <th>متن نظر</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ ثبت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FilterResult.Data)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.UserFullName (@item.UserId)</td>
+                        <td>@item.ProductTitle (@item.ProductId)</td>
+                        <td>@item.Text</td>
+                        <td>
+                            @if (item.Status == (int)CommentStatus.Pending)
+                            {
+                                <span class="badge bg-warning">در انتظار</span>
+                            }
+                            else if (item.Status == (int)CommentStatus.Accepted)
+                            {
+                                <span class="badge bg-success">تأیید شده</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">رد شده</span>
+                            }
+                        </td>
+                        <td>@item.CreationDate.ToPersianDateTime()</td>
+                        <td>
+                            <form method="post" asp-page-handler="Accept" asp-route-id="@item.Id" class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm">تأیید</button>
+                            </form>
+                            <form method="post" asp-page-handler="Reject" asp-route-id="@item.Id" class="d-inline">
+                                <button type="submit" class="btn btn-warning btn-sm">رد</button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -8,7 +8,7 @@ namespace Eshop.RazorPage.Services.Users
     public class UserService : IUserService
     {
         private readonly HttpClient _client;
-        private const string ModuleName = "users";
+        private const string ModuleName = "api/users";
 
         public UserService(HttpClient client)
         {

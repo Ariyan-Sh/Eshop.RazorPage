@@ -16,43 +16,43 @@ namespace Eshop.RazorPage.Services.Orders
 
         public async Task<ApiResult> AddOrderItem(AddOrderItemCommand command)
         {
-            var result = await _client.PostAsJsonAsync("order", command);
+            var result = await _client.PostAsJsonAsync("api/order", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> CheckOutOrder(CheckOutOrderCommand command)
         {
-            var result = await _client.PostAsJsonAsync("order/Checkout", command);
+            var result = await _client.PostAsJsonAsync("api/order/Checkout", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> DecreaseOrderItem(DecreaseOrderItemCountCommand command)
         {
-            var result = await _client.PutAsJsonAsync("order/orderItem/DecreaseCount", command);
+            var result = await _client.PutAsJsonAsync("api/order/orderItem/DecreaseCount", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> DeleteOrderItem(DeleteOrderItemCommand command)
         {
-            var result = await _client.DeleteAsync($"order/orderItem/{command.OrderItemId}");
+            var result = await _client.DeleteAsync($"api/order/orderItem/{command.OrderItemId}");
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<OrderDto?> GetCurrentOrder()
         {
-            var result = await _client.GetFromJsonAsync<ApiResult<OrderDto>?>($"order/current/");
+            var result = await _client.GetFromJsonAsync<ApiResult<OrderDto>?>($"api/order/current/");
             return result?.Data;
         }
 
         public async Task<OrderDto?> GetOrderById(long orderId)
         {
-            var result = await _client.GetFromJsonAsync<ApiResult<OrderDto>?>($"order/{orderId}");
+            var result = await _client.GetFromJsonAsync<ApiResult<OrderDto>?>($"api/order/{orderId}");
             return result?.Data;
         }
 
         public async Task<OrderFilterResult> GetOrders(OrderFilterParams filterParams)
         {
-            var url = $"order/?pageId={filterParams.PageId}&take={filterParams.Take}";
+            var url = $"api/order/?pageId={filterParams.PageId}&take={filterParams.Take}";
             if (filterParams.StartDate != null)
                 url += "&startDate=" + filterParams.StartDate;
 
@@ -71,7 +71,7 @@ namespace Eshop.RazorPage.Services.Orders
 
         public async Task<OrderFilterResult> GetUserOrders(int pageId, int take, OrderStatus? orderStatus)
         {
-            var url = $"order/current/filter?pageId={pageId}&take={take}";
+            var url = $"api/order/current/filter?pageId={pageId}&take={take}";
             if (orderStatus != null)
                 url += $"&status={orderStatus}";
             var result = await _client
@@ -81,13 +81,13 @@ namespace Eshop.RazorPage.Services.Orders
 
         public async Task<ApiResult> IncreaseOrderItem(IncreaseOrderItemCountCommand command)
         {
-            var result = await _client.PutAsJsonAsync("order/orderItem/IncreaseCount", command);
+            var result = await _client.PutAsJsonAsync("api/order/orderItem/IncreaseCount", command);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
 
         public async Task<ApiResult> SendOrder(long orderId)
         {
-            var result = await _client.PutAsync($"order/SendOrder/{orderId}",null);
+            var result = await _client.PutAsync($"api/order/SendOrder/{orderId}",null);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }
     }

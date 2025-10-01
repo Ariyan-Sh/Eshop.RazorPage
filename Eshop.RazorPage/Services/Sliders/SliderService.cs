@@ -6,7 +6,7 @@ namespace Eshop.RazorPage.Services.Sliders
     public class SliderService : ISliderService
     {
         private readonly HttpClient _client;
-        private const string ModuleName = "slider";
+        private const string ModuleName = "api/slider";
         public SliderService(HttpClient client)
         {
             _client = client;
@@ -15,8 +15,9 @@ namespace Eshop.RazorPage.Services.Sliders
         public async Task<ApiResult> CreateSlider(CreateSliderCommand command)
         {
             var formData = new MultipartFormDataContent();
+            if (command.ImageFile != null && command.ImageFile.IsImage())
+                formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
             formData.Add(new StringContent(command.Link), "Link");
-            formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
             formData.Add(new StringContent(command.Title), "Title");
 
             var result = await _client.PostAsync($"{ModuleName}", formData);
@@ -32,12 +33,13 @@ namespace Eshop.RazorPage.Services.Sliders
         public async Task<ApiResult> EditSlider(EditSliderCommand command)
         {
             var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(command.Title), "Title");
+            
 
             if (command.ImageFile != null && command.ImageFile.IsImage())
                 formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
             formData.Add(new StringContent(command.Link), "Link");
             formData.Add(new StringContent(command.Id.ToString()), "Id");
+            formData.Add(new StringContent(command.Title), "Title");
 
             var result = await _client.PutAsync($"{ModuleName}", formData);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
