@@ -47,7 +47,7 @@ namespace Eshop.RazorPage.Services.Sellers
         public async Task<InventoryDto?> GetInventoryById(long inventoryId)
         {
             var result = await _client.GetFromJsonAsync<ApiResult<InventoryDto>>($"{ModuleName}/Inventory/{inventoryId}");
-            return result?.Data;
+            return result.Data;
         }
 
         public async Task<SellerDto?> GetSellerById(long sellerId)
