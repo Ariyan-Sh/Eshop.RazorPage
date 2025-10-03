@@ -120,4 +120,22 @@ public class ProductService : IProductService
         var result = await _client.GetFromJsonAsync<ApiResult<ProductFilterResult>>(url);
         return result?.Data;
     }
+
+    public async Task<ProductShopResult> GetProductForShop(ProductShopFilterParam filterParams)
+    {
+        var url = $"{ModuleName}/Shop?pageId={filterParams.PageId}&take={filterParams.Take}" +
+                  $"&categorySlug={filterParams.CategorySlug}&onlyAvailableProducts={filterParams.OnlyAvailableProducts}" +
+                  $"&search={filterParams.Search}&SearchOrderBy={filterParams.SearchOrderBy}";
+        if (filterParams.JustHasDiscount != null)
+            url += $"&JustHasDiscount={filterParams.JustHasDiscount}";
+
+        var result = await _client.GetFromJsonAsync<ApiResult<ProductShopResult>>(url);
+        return result?.Data;
+    }
+
+    public async Task<SingleProductDto?> GetSingleProduct(string slug)
+    {
+        var result = await _client.GetFromJsonAsync<ApiResult<SingleProductDto?>>($"{ModuleName}/single/{slug}");
+        return result?.Data;
+    }
 }

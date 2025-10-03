@@ -13,6 +13,9 @@ namespace Eshop.RazorPage.Services.Products
 
         Task<ProductDto?> GetProductById(long productId);
         Task<ProductDto?> GetProductBySlug(string slug);
+        Task<SingleProductDto?> GetSingleProduct(string slug);
         Task<ProductFilterResult> GetProductByFilter(ProductFilterParams filterParams);
+        Task<ProductShopResult> GetProductForShop(ProductShopFilterParam filterParams);
+
     }
 }

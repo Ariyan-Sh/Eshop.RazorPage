@@ -2,10 +2,10 @@
 @using Eshop.RazorPage.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Eshop.RazorPage.Models.Products
-@model Eshop.RazorPage.Models.Sellers.Commands.EditSellerInventoryCommand
-<form method="post"  asp-page="Index" data-ajax="true">
-    @Html.HiddenFor(f=>f.InventoryId)
-    @Html.HiddenFor(f=>f.SellerId)
+@model Eshop.RazorPage.Models.Sellers.Commmands.EditSellerInventoryCommand
+<form method="post" asp-page="Index" data-ajax="true">
+    @Html.HiddenFor(f => f.InventoryId)
+    @Html.HiddenFor(f => f.SellerId)
     <div class="row ">
         <div class="col-md-6">
             @Html.EditorFor(f => f.Price)
@@ -14,10 +14,10 @@
             @Html.EditorFor(f => f.Count)
         </div>
         <div class="col-md-6">
-            @Html.EditorFor(f => f.DiscountPercentage)
+            @Html.EditorFor(f => f.DicountPercentage)
         </div>
     </div>
     <div class="card-footer text-left">
-        <submit/>
+        <submit />
     </div>
 </form>
