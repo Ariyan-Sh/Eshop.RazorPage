@@ -1,0 +1,43 @@
+﻿@page "{commentId:long}"
+@model Eshop.RazorPage.Pages.Admin.Comments.EditModel
+@{
+    ViewData["title"] = "ویرایش نظر";
+    ViewData["selected"] = "comments_comment";
+}
+
+<div class="card shadow-lg">
+    <div class="card-header text-left">
+        <h5 class="card-title">ویرایش نظر</h5>
+    </div>
+
+    <form method="post" class="card-body">
+        <div class="row">
+            <input type="hidden" asp-for="CommentId" />
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="UserId" class="form-label"></label>
+                <input asp-for="UserId" class="form-control" readonly />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="CreationDate" class="form-label"></label>
+                <input asp-for="CreationDate" class="form-control" readonly />
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="Text" class="form-label"></label>
+                <textarea asp-for="Text" rows="5" class="form-control"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-page="Index" class="btn btn-secondary">بازگشت</a>
+            <button type="submit" class="btn btn-success">ویرایش نظر</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

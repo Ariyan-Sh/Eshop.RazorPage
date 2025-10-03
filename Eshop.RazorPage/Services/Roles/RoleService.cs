@@ -33,7 +33,7 @@ namespace Eshop.RazorPage.Services.Roles
         public async Task<List<RoleDto>> GetRoles()
         {
             var result = await _client.GetFromJsonAsync<ApiResult<List<RoleDto>>>(ModuleName);
-            return result!.Data;
+            return result.Data;
         }
     }
 }

@@ -1,0 +1,45 @@
+﻿@page
+@using Eshop.RazorPage.Infrastructure.Utils
+@using Eshop.RazorPage.Infrastructure
+@model Eshop.RazorPage.Pages.Admin.Comments.AddModel
+@{
+    ViewData["title"] = "افزودن نظر جدید";
+    ViewData["selected"] = "comments_comment";
+}
+
+<div class="card shadow-lg">
+    <div class="card-header text-left">
+        <h5 class="card-title">ثبت نظر جدید</h5>
+    </div>
+
+    <form method="post" class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="UserId" class="form-label"></label>
+                <input asp-for="UserId" type="number" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="ProductId" class="form-label"></label>
+                <input asp-for="ProductId" type="number" class="form-control" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="Text" class="form-label"></label>
+                <textarea asp-for="Text" rows="5" class="form-control"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-page="Index" class="btn btn-secondary">بازگشت</a>
+            <button type="submit" class="btn btn-primary">ثبت نظر</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

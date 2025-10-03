@@ -21,13 +21,15 @@ public class ProductService : IProductService
 
     public async Task<ApiResult> CreateProduct(CreateProductCommand command)
     {
-        var formData = new MultipartFormDataContent();
-        formData.Add(new StringContent(command.Slug), "Slug");
-        formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
-        formData.Add(new StringContent(command.Title), "Title");
-        formData.Add(new StringContent(command.Description), "Description");
-        formData.Add(new StringContent(command.CategoryId.ToString()), "CategoryId");
-        formData.Add(new StringContent(command.SubCategoryId.ToString()), "SubCategoryId");
+        var formData = new MultipartFormDataContent
+        {
+            { new StringContent(command.Slug), "Slug" },
+            { new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName },
+            { new StringContent(command.Title), "Title" },
+            { new StringContent(command.Description), "Description" },
+            { new StringContent(command.CategoryId.ToString()), "CategoryId" },
+            { new StringContent(command.SubCategoryId.ToString()), "SubCategoryId" }
+        };
         if (command.SecondarySubCategoryId != null)
             formData.Add(new StringContent(command.SecondarySubCategoryId.ToString() ?? string.Empty), "SecondarySubCategoryId");
         formData.Add(new StringContent(command.SeoData.MetaTitle), "SeoData.MetaTitle");
@@ -47,9 +49,11 @@ public class ProductService : IProductService
 
     public async Task<ApiResult> EditProduct(EditProductCommand command)
     {
-        var formData = new MultipartFormDataContent();
-        formData.Add(new StringContent(command.Slug), "Slug");
-        formData.Add(new StringContent(command.ProductId.ToString()), "ProductId");
+        var formData = new MultipartFormDataContent
+        {
+            { new StringContent(command.Slug), "Slug" },
+            { new StringContent(command.ProductId.ToString()), "ProductId" }
+        };
         if (command.ImageFile != null)
             formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
         formData.Add(new StringContent(command.Title), "Title");
@@ -73,10 +77,12 @@ public class ProductService : IProductService
 
     public async Task<ApiResult> AddImage(AddProductImageCommand command)
     {
-        var formData = new MultipartFormDataContent();
-        formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
-        formData.Add(new StringContent(command.Sequence.ToString()), "Sequence");
-        formData.Add(new StringContent(command.ProductId.ToString()), "ProductId");
+        var formData = new MultipartFormDataContent
+        {
+            { new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName },
+            { new StringContent(command.Sequence.ToString()), "Sequence" },
+            { new StringContent(command.ProductId.ToString()), "ProductId" }
+        };
 
         var result = await _client.PostAsync($"{ModuleName}/images", formData);
         return await result.Content.ReadFromJsonAsync<ApiResult>();
