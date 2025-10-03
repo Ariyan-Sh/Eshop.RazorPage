@@ -1,0 +1,42 @@
+﻿@page
+@model Eshop.RazorPage.Pages.Admin.Sellers.AddModel
+@{
+    ViewData["title"] = "افزودن فروشنده";
+    ViewData["selected"] = "sellers_seller";
+}
+
+<div class="card shadow-lg">
+    <div class="card-header">
+        <h5 class="mb-0">افزودن فروشنده جدید</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="UserId" class="form-label"></label>
+                <input asp-for="UserId" type="number" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShopName" class="form-label"></label>
+                <input asp-for="ShopName" class="form-control" />
+                <span asp-validation-for="ShopName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NationalCode" class="form-label"></label>
+                <input asp-for="NationalCode" class="form-control" />
+                <span asp-validation-for="NationalCode" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-page="Index" class="btn btn-secondary">بازگشت</a>
+                <button type="submit" class="btn btn-success">ثبت فروشنده</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

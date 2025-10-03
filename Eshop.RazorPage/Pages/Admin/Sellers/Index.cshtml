@@ -1,0 +1,76 @@
+﻿@page "{handler?}"
+@model Eshop.RazorPage.Pages.Admin.Sellers.IndexModel
+@using Eshop.RazorPage.Infrastructure.Utils
+@using Eshop.RazorPage.Infrastructure
+
+@{
+    ViewData["title"] = "مدیریت فروشندگان";
+    ViewData["selected"] = "sellers_seller";
+}
+
+<form class="card shadow-lg mb-3" method="get">
+    <div class="card-header text-left">
+        <a asp-page="Index" class="btn btn-danger btn-sm">حذف فیلتر</a>
+        <button type="submit" class="btn btn-primary btn-sm">فیلتر</button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label>نام فروشگاه</label>
+                <input type="text" asp-for="FilterParams.ShopName" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label>کد ملی</label>
+                <input type="text" asp-for="FilterParams.NationalCode" class="form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<a asp-page="Add" class="btn btn-success mb-2">
+    <i class="fa fa-plus"></i>
+    افزودن فروشنده
+</a>
+
+<div class="card">
+    <div class="card-body table-responsive p-0">
+        <table class="table table-bordered table-hover text-center">
+            <thead>
+                <tr>
+                    <th>شناسه</th>
+                    <th>نام فروشگاه</th>
+                    <th>کد ملی</th>
+                    <th>شناسه کاربر</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ ثبت‌نام</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.FilterResult?.Data != null && Model.FilterResult.Data.Any())
+                {
+                    foreach (var seller in Model.FilterResult.Data)
+                    {
+                        <tr>
+                            <td>@seller.Id</td>
+                            <td>@seller.ShopName</td>
+                            <td>@seller.NationalCode</td>
+                            <td>@seller.UserId</td>
+                            <td>@seller.Status.ToString()</td>
+                            <td>@seller.CreationDate.ToPersianDateTime()</td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" asp-page="Edit" asp-route-sellerId="@seller.Id">ویرایش</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">هیچ فروشنده‌ای یافت نشد</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -51,8 +51,16 @@ namespace Eshop.RazorPage.Pages.Auth
             }
             var token = result.Data.Token;
             var refreshToken = result.Data.RefreshToken;
-            HttpContext.Response.Cookies.Append("token", token);
-            HttpContext.Response.Cookies.Append("refreshToken", refreshToken);
+            HttpContext.Response.Cookies.Append("token", token, new CookieOptions()
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddDays(7)
+            });
+            HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions()
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddDays(10)
+            });
             return Redirect("/");
 
 

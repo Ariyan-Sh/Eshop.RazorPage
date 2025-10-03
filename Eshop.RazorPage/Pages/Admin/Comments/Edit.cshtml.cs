@@ -17,8 +17,6 @@ namespace Eshop.RazorPage.Pages.Admin.Comments
         {
             _commentService = commentService;
         }
-        [Display(Name = "شناسه نظر")]
-        public long CommentId { get; set; }
         [Display(Name = "شناسه کاربر")]
         public long UserId { get; set; }
         [Display(Name = "تاریخ ثبت")]
@@ -35,7 +33,6 @@ namespace Eshop.RazorPage.Pages.Admin.Comments
             }
             Text = comment.Text;
             UserId = comment.UserId;
-            CommentId = comment.Id;
             CreationDate = comment.CreationDate.ToPersianDateTime();
             return Page();
         }
