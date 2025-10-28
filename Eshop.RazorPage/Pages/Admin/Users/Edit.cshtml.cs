@@ -19,6 +19,8 @@ namespace Eshop.RazorPage.Pages.Admin.Users
         {
             _userService = userService;
         }
+        [BindProperty(SupportsGet = true)]
+        public long UserId { get; set; }
         [Display(Name = "نام")]
         [Required(ErrorMessage = "{0} را وارد کنید")]
         public string Name { get; set; }
@@ -50,10 +52,11 @@ namespace Eshop.RazorPage.Pages.Admin.Users
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(long userId)
+        public async Task<IActionResult> OnPost()
         {
             var result = await _userService.EditUser(new EditUserCommand()
             {
+                UserId = UserId,
                 Name = Name,
                 Family = Family,
                 PhoneNumber = PhoneNumber,

@@ -35,5 +35,11 @@ namespace Eshop.RazorPage.Services.Roles
             var result = await _client.GetFromJsonAsync<ApiResult<List<RoleDto>>>(ModuleName);
             return result.Data;
         }
+
+        public async Task<ApiResult> AssignRole(AssignRoleCommand command)
+        {
+            var result = await _client.PostAsJsonAsync(ModuleName+"/assign-role", command);
+            return await result.Content.ReadFromJsonAsync<ApiResult>();
+        }
     }
 }

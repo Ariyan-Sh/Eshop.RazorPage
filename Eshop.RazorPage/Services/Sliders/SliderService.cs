@@ -33,14 +33,14 @@ namespace Eshop.RazorPage.Services.Sliders
 
         public async Task<ApiResult> EditSlider(EditSliderCommand command)
         {
-            var formData = new MultipartFormDataContent
+            var formData = new MultipartFormDataContent();
+            if(command.ImageFile!= null)
             {
-                { new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName },
-                { new StringContent(command.Link), "Link" },
-                { new StringContent(command.Id.ToString()), "Id" },
-                { new StringContent(command.Title), "Title" }
-            };
-
+                formData.Add(new StreamContent(command.ImageFile.OpenReadStream()), "ImageFile", command.ImageFile.FileName);
+            }
+            formData.Add(new StringContent(command.Link), "Link");
+            formData.Add(new StringContent(command.Id.ToString()), "Id");
+            formData.Add(new StringContent(command.Title), "Title");
             var result = await _client.PutAsync($"{ModuleName}", formData);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
         }

@@ -7,6 +7,7 @@ namespace Eshop.RazorPage.Services.Roles
     {
         Task<ApiResult> CreateRole(CreateRoleCommand command);
         Task<ApiResult> EditRole(EditRoleCommand command);
+        Task<ApiResult> AssignRole(AssignRoleCommand command);
 
         Task<RoleDto> GetRoleById(long roleId);
         Task<List<RoleDto>> GetRoles();

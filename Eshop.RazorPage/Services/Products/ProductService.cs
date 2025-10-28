@@ -33,11 +33,11 @@ public class ProductService : IProductService
         if (command.SecondarySubCategoryId != null)
             formData.Add(new StringContent(command.SecondarySubCategoryId.ToString() ?? string.Empty), "SecondarySubCategoryId");
         formData.Add(new StringContent(command.SeoData.MetaTitle), "SeoData.MetaTitle");
-        formData.Add(new StringContent(command.SeoData.Canonical), "SeoData.Canonical");
+        formData.Add(new StringContent(command.SeoData.Canonical ?? string.Empty), "SeoData.Canonical");
         formData.Add(new StringContent(command.SeoData.MetaKeyWords), "SeoData.MetaKeyWords");
         formData.Add(new StringContent(command.SeoData.MetaDescription), "SeoData.MetaDescription");
         formData.Add(new StringContent(command.SeoData.IndexPage.ToString()), "SeoData.IndexPage");
-        formData.Add(new StringContent(command.SeoData.Schema), "SeoData.Schema");
+        formData.Add(new StringContent(command.SeoData.Schema ?? string.Empty), "SeoData.Schema");
 
         var specifications = JsonConvert.SerializeObject(command.Specifications);
         formData.Add(new StringContent(specifications, Encoding.UTF8, "application/json"), "Specifications");
@@ -62,11 +62,11 @@ public class ProductService : IProductService
         formData.Add(new StringContent(command.SubCategoryId.ToString()), "SubCategoryId");
         formData.Add(new StringContent(command.SecondarySubCategoryId.ToString() ?? string.Empty), "SecondarySubCategoryId");
         formData.Add(new StringContent(command.SeoData.MetaTitle), "SeoData.MetaTitle");
-        formData.Add(new StringContent(command.SeoData.Canonical), "SeoData.Canonical");
+        formData.Add(new StringContent(command.SeoData.Canonical ?? string.Empty), "SeoData.Canonical");
         formData.Add(new StringContent(command.SeoData.MetaKeyWords), "SeoData.MetaKeyWords");
         formData.Add(new StringContent(command.SeoData.MetaDescription), "SeoData.MetaDescription");
         formData.Add(new StringContent(command.SeoData.IndexPage.ToString()), "SeoData.IndexPage");
-        formData.Add(new StringContent(command.SeoData.Schema), "SeoData.Schema");
+        formData.Add(new StringContent(command.SeoData.Schema ?? string.Empty), "SeoData.Schema");
 
         var specifications = JsonConvert.SerializeObject(command.Specifications);
         formData.Add(new StringContent(specifications, Encoding.UTF8, "application/json"), "Specifications");

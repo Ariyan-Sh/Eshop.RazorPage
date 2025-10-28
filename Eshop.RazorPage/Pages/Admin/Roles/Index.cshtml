@@ -23,9 +23,9 @@
                     <td>@item.Title</td>
                     <td>
                         <a class="btn btn-sm btn-primary" asp-page="Edit" asp-route-id="@item.Id">ویرایش</a>
+                        <a class="btn btn-sm btn-warning" asp-page="Assign" asp-route-roleId="@item.Id"> انتساب کاربر</a>
                     </td>
                 </tr>
-
             }
         </tbody>
     </table>

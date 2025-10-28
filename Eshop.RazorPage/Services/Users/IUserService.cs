@@ -10,6 +10,7 @@ namespace Eshop.RazorPage.Services.Users
         Task<ApiResult> EditUser(EditUserCommand command);
         Task<ApiResult> ChangePassword(ChangePasswordCommand command);
         Task<ApiResult> EditUserCurrent(EditUserCommand command);
+        Task<List<Select2UserDto>> SearchUsersAsync(string query, int take = 20);
 
         Task<UserDto?> GetUserById(long userId);
         Task<UserDto?> GetCurrentUser();

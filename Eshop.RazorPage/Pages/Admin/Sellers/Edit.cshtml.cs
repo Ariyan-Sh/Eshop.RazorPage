@@ -44,6 +44,7 @@ namespace Eshop.RazorPage.Pages.Admin.Sellers
         {
             var result = await _sellerService.EditSeller(new EditSellerCommand()
             {
+                SellerId = sellerId,
                 ShopName = ShopName,
                 NationalCode = NationalCode,
                 Status = Status

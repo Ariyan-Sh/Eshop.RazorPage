@@ -1,4 +1,5 @@
-using Eshop.RazorPage.Infrastructure;
+﻿using Eshop.RazorPage.Infrastructure;
+using Eshop.RazorPage.Infrastructure.CookieUtils;
 using Eshop.RazorPage.Services.Auth;
 using Eshop.RazorPage.Services.Banners;
 using Eshop.RazorPage.Services.Categories;
@@ -22,6 +23,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterApiServices();
 builder.Services.AddHttpContextAccessor();
+
+
+builder.Services.AddCookieManager(); 
+builder.Services.AddScoped<ShopCartCookieManager>();
 
 builder.Services.AddAuthorization(option =>
 {

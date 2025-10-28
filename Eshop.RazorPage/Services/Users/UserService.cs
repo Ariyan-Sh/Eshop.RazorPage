@@ -30,12 +30,15 @@ namespace Eshop.RazorPage.Services.Users
         public async Task<ApiResult> EditUser(EditUserCommand command)
         {
             var formData = new MultipartFormDataContent();
+            if(command.Avatar != null)
+            {
+                formData.Add(new StreamContent(command.Avatar.OpenReadStream()), "Avatar", command.Avatar.FileName);
+            }
+            formData.Add(new StringContent(command.PhoneNumber), "PhoneNumber");
+            formData.Add(new StringContent(command.Gender.ToString()), "Gender");
             formData.Add(new StringContent(command.Name), "Name");
             formData.Add(new StringContent(command.Family), "Family");
-            formData.Add(new StringContent(command.PhoneNumber), "PhoneNumber");
             formData.Add(new StringContent(command.Email), "Email");
-            formData.Add(new StreamContent(command.Avatar.OpenReadStream()), "Avatar", command.Avatar.FileName);
-            formData.Add(new StringContent(command.Gender.ToString()), "Gender");
 
             var result = await _client.PutAsync($"{ModuleName}", formData);
             return await result.Content.ReadFromJsonAsync<ApiResult>();
@@ -43,8 +46,10 @@ namespace Eshop.RazorPage.Services.Users
 
         public async Task<ApiResult> EditUserCurrent(EditUserCommand command)
         {
-            var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(command.PhoneNumber), "PhoneNumber");
+            var formData = new MultipartFormDataContent
+            {
+                { new StringContent(command.PhoneNumber), "PhoneNumber" }
+            };
 
             if (command.Avatar != null)
                 formData.Add(new StreamContent(command.Avatar.OpenReadStream()), "Avatar", command.Avatar.FileName);
@@ -73,9 +78,21 @@ namespace Eshop.RazorPage.Services.Users
         public async Task<UserFilterResult> GetUsersByFilter(UserFilterParams filterParams)
         {
             var url = filterParams.GenerateBaseFilterUrl(ModuleName) +
-                $"email={filterParams.Email}&phoneNumber={filterParams.PhoneNumber}&id={filterParams.Id}";
+        $"&id={filterParams.Id}" +
+        $"&name={Uri.EscapeDataString(filterParams.Name ?? "")}" +
+        $"&family={Uri.EscapeDataString(filterParams.Family ?? "")}" +
+        $"&email={Uri.EscapeDataString(filterParams.Email ?? "")}" +
+        $"&phoneNumber={Uri.EscapeDataString(filterParams.PhoneNumber ?? "")}";
+
             var result = await _client.GetFromJsonAsync<ApiResult<UserFilterResult>>(url);
             return result.Data;
+        }
+
+        public async Task<List<Select2UserDto>> SearchUsersAsync(string query, int take = 20)
+        {
+            var url = $"{ModuleName}/Search?query={Uri.EscapeDataString(query)}&take={take}";
+            var result = await _client.GetFromJsonAsync<ApiResult<List<Select2UserDto>>>(url);
+            return result?.Data ?? new List<Select2UserDto>();
         }
     }
 }
