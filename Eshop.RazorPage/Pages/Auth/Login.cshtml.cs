@@ -29,6 +29,7 @@ namespace Eshop.RazorPage.Pages.Auth
         public string RedirectTo { get; set; }
         public IActionResult OnGet(string redirectTo)
         {
+            var claim = User.Claims.ToList();
             if (User.Identity.IsAuthenticated)
             {
                 return Redirect("/");
@@ -44,7 +45,7 @@ namespace Eshop.RazorPage.Pages.Auth
                 PhoneNumber = PhoneNumber,
                 Password = Password
             });
-            if(result.IsSuccess == false)
+            if(result!.IsSuccess == false)
             {
                 ModelState.AddModelError(nameof(PhoneNumber), result.MetaData.Message);
                 return Page();
@@ -60,8 +61,8 @@ namespace Eshop.RazorPage.Pages.Auth
             {
                 HttpOnly = true,
                 Expires = DateTimeOffset.Now.AddDays(10)
-            });
-            return Redirect("/");
+            }); 
+            return Redirect(RedirectTo);
 
 
 

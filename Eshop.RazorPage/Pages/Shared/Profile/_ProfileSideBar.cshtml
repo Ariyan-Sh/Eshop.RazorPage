@@ -1,9 +1,27 @@
-﻿@using Eshop.RazorPage.Services.Users
+﻿@using Eshop.RazorPage.Models.Users
+@using Eshop.RazorPage.Services.Users
 @using Eshop.RazorPage.Infrastructure
 @inject IUserService _user
+
+@{
+    var user = HttpContextAccessor.HttpContext.User;
+    if (!user.Identity.IsAuthenticated)
+    {
+        <script>
+            window.location.href = "/auth/login?redirectTo=" + window.location.pathname;
+        </script>
+        return;
+    }
+}
 @{
     var currentUser = await _user.GetCurrentUser();
 }
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+
+
 <div class="col-lg-3 col-md-4 mb-md-0 mb-3 sticky-sidebar">
     <div class="sidebar-widget">
 

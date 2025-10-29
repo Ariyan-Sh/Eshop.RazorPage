@@ -13,6 +13,7 @@ using Eshop.RazorPage.Services.UserAddress;
 using Eshop.RazorPage.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -27,6 +28,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCookieManager(); 
 builder.Services.AddScoped<ShopCartCookieManager>();
+
+
 
 builder.Services.AddAuthorization(option =>
 {
@@ -55,21 +58,20 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(option =>
+}).AddJwtBearer("Bearer", option =>
 {
     option.TokenValidationParameters = new TokenValidationParameters
     {
         ValidAudience = builder.Configuration["JwtConfig:Audience"],
         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
         IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:SignInKey"])),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:SecretKey"])),
         ValidateLifetime = true,
         ValidateAudience = true,
         ValidateIssuer = true,
-        ValidateIssuerSigningKey = true
+        ValidateIssuerSigningKey = true,
     };
 });
-
 var app = builder.Build();
 
 
