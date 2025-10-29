@@ -34,6 +34,7 @@ namespace Eshop.RazorPage.Services.Users
             {
                 formData.Add(new StreamContent(command.Avatar.OpenReadStream()), "Avatar", command.Avatar.FileName);
             }
+            formData.Add(new StringContent(command.UserId.ToString()), "UserId");
             formData.Add(new StringContent(command.PhoneNumber), "PhoneNumber");
             formData.Add(new StringContent(command.Gender.ToString()), "Gender");
             formData.Add(new StringContent(command.Name), "Name");

@@ -4,6 +4,7 @@
 @{
     ViewData["title"] = "سبد خرید";
 }
+
 @if (Model.OrderDto == null || Model.OrderDto.Items.Count == 0)
 {
     <div class="text-center">
@@ -19,12 +20,8 @@ else
                 <div class="checkout-step">
                     <ul>
                         <li class="active"><span>سبد خرید</span></li>
-                        <li>
-                            <span>نحوه ارسال و پرداخت</span>
-                        </li>
-                        <li>
-                            <span>اتمام خرید و ارسال</span>
-                        </li>
+                        <li><span>نحوه ارسال و پرداخت</span></li>
+                        <li><span>اتمام خرید و ارسال</span></li>
                     </ul>
                 </div>
                 <div class="checkout-section-content">
@@ -33,28 +30,16 @@ else
                         {
                             <div class="cart-item py-4 px-3">
                                 <div class="item-thumbnail">
-                                    <a href="#">
-                                        <img src="@Directories.GetProductImage(item.ProductImageName)" alt="@item.ProductTitle">
-                                    </a>
+                                    <a href="#"><img src="@Directories.GetProductImage(item.ProductImageName)" alt="@item.ProductTitle"></a>
                                 </div>
                                 <div class="item-info flex-grow-1">
                                     <div class="item-title">
-                                        <h2>
-                                            <a href="/product/@item.ProductSlug">
-                                                @item.ProductTitle
-                                            </a>
-                                        </h2>
+                                        <h2><a href="/product/@item.ProductSlug">@item.ProductTitle</a></h2>
                                     </div>
                                     <div class="item-detail">
                                         <ul>
-                                            <li>
-                                                <i class="far fa-store-alt text-muted"></i>
-                                                <span>@item.ShopName</span>
-                                            </li>
-                                            <li>
-                                                <i class="far fa-clipboard-check text-primary"></i>
-                                                <span>موجود در انبار</span>
-                                            </li>
+                                            <li><i class="far fa-store-alt text-muted"></i><span>@item.ShopName</span></li>
+                                            <li><i class="far fa-clipboard-check text-primary"></i><span>موجود در انبار</span></li>
                                         </ul>
                                         <div class="item-quantity--item-price">
                                             <div class="item-quantity">
@@ -66,10 +51,8 @@ else
                                                     </div>
                                                 </div>
                                                 <delete-item class="item-remove-btn mr-3" url="@Url.Page("ShopCart", "DeleteItem", new { id = item.Id })">
-                                                    <i class="far fa-trash-alt"></i>
-                                                    حذف
+                                                    <i class="far fa-trash-alt"></i> حذف
                                                 </delete-item>
-
                                             </div>
                                             <div class="item-price">
                                                 @item.TotalPrice.ToString("#,0")<span class="text-sm mr-1">تومان</span>
@@ -79,26 +62,54 @@ else
                                 </div>
                             </div>
                         }
+                    </div>
 
+                    <!-- انتخاب روش ارسال -->
+                    <div class="shipping-method mt-4 p-3 border rounded shadow-sm">
+                        <h4>روش ارسال</h4>
+                        <form method="post" asp-page-handler="SelectShippingMethod" id="shipping-form">
+                            @foreach (var method in Model.ShippingMethods)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           asp-for="SelectedShippingMethodId"
+                                           value="@method.Id"
+                                           id="ship_@method.Id" />
+                                    <label class="form-check-label" for="ship_@method.Id">
+                                        @method.ShippingType - هزینه: @method.ShippingCost.ToString("#,0") تومان
+                                    </label>
+                                </div>
+                            }
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- ستون جمع کل و ادامه خرید -->
         <div class="col-xl-3 col-lg-4 col-md-4">
-            <div class="shadow-around pt-3">
+            <div class="shadow-around pt-3" id="cart-summary">
                 <div class="d-flex justify-content-between px-3 py-2">
                     <span class="text-muted">قیمت کالاها (@Model.OrderDto.Items.Sum(s => s.Count))</span>
-                    <span class="text-muted">
-                        @Model.OrderDto.Items.Sum(s => s.TotalPrice).ToString("#,0")
+                    <span class="text-muted" id="total-items-price">
+                        @Model.OrderDto.Items.Sum(s => s.TotalPrice - (Model.OrderDto.ShippingMethod?.ShippingCost ?? 0)).ToString("#,0")
                         <span class="text-sm">تومان</span>
                     </span>
                 </div>
+                <div class="d-flex justify-content-between px-3 py-2">
+                    <span class="text-muted">هزینه ارسال</span>
+                    <span class="text-muted" id="shipping-cost">@Model.OrderDto.ShippingMethod?.ShippingCost.ToString("#,0") ?? "0"</span>
+                </div>
                 <hr>
+                <div class="d-flex justify-content-between px-3 py-2 font-weight-bold">
+                    <span class="text-muted">جمع کل</span>
+                    <span class="text-muted" id="total-price">@Model.OrderDto.TotalPrice.ToString("#,0")</span>
+                </div>
                 <div class="d-flex px-3 py-4">
                     @if (User.Identity.IsAuthenticated)
                     {
                         <a asp-page="/Checkout/Index" class="btn btn-danger btn-block py-2">ادامه فرایند خرید</a>
-
                     }
                     else
                     {
@@ -110,7 +121,6 @@ else
     </div>
 }
 
-
 @section Scripts
 {
     <script>
@@ -120,25 +130,37 @@ else
             $.ajax({
                 url: "/shopcart/IncreaseItemCount?id=" + id,
                 type: "post",
-                data: {
-                    __RequestVerificationToken: token
-                },
+                data: { __RequestVerificationToken: token },
             }).done(function(data) {
                 var res = JSON.parse(data);
                 CallBackHandler(res);
             });
         }
+
         function minus(id) {
             $.ajax({
                 url: "/shopcart/DecreaseItemCount?id=" + id,
                 type: "post",
-                data: {
-                    __RequestVerificationToken: token
-                },
+                data: { __RequestVerificationToken: token },
             }).done(function(data) {
                 var res = JSON.parse(data);
                 CallBackHandler(res);
             });
         }
+
+        // AJAX روش ارسال
+        $("#shipping-form input[type=radio]").change(function(){
+            $.ajax({
+                url: $("#shipping-form").attr("action"),
+                type: "post",
+                data: $("#shipping-form").serialize(),
+            }).done(function(res){
+                if(res.Success){
+                    $("#shipping-cost").text(res.ShippingCost.toLocaleString());
+                    $("#total-price").text(res.TotalPrice.toLocaleString());
+                }
+                CallBackHandler(res);
+            });
+        });
     </script>
 }

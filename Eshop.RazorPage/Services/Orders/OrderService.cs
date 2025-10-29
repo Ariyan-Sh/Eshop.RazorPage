@@ -69,6 +69,12 @@ namespace Eshop.RazorPage.Services.Orders
             return result?.Data;
         }
 
+        public async Task<List<ShippingMethod>> GetShippingMethods()
+        {
+            var result = await _client.GetFromJsonAsync<ApiResult<List<ShippingMethod>>>("api/shippingmethod");
+            return result?.Data ?? new List<ShippingMethod>();
+        }
+
         public async Task<OrderFilterResult> GetUserOrders(int pageId, int take, OrderStatus? orderStatus)
         {
             var url = $"api/order/current/filter?pageId={pageId}&take={take}";

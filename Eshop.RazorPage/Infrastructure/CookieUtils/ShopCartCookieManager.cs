@@ -102,6 +102,18 @@ public class ShopCartCookieManager
         }
     }
 
+    public void SetShippingMethod(ShippingMethod method)
+    {
+        var shopCart = GetShopCart();
+        if (shopCart == null)
+            return;
+
+        shopCart.ShippingMethodId = method.Id;
+        shopCart.ShippingMethod = method;
+        SetCookie(shopCart);
+    }
+
+
     public void Increase(long itemId)
     {
         var shopCart = GetShopCart();

@@ -2,6 +2,7 @@
 using Eshop.RazorPage.Infrastructure.CookieUtils;
 using Eshop.RazorPage.Infrastructure.RazorUtils;
 using Eshop.RazorPage.Models;
+using Eshop.RazorPage.Models.Orders;
 using Eshop.RazorPage.Models.Orders.Command;
 using Eshop.RazorPage.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,13 @@ namespace Eshop.RazorPage.Pages
             _orderService = orderService;
             _shopCartCookieManager = shopCartCookieManager;
         }
+
         public OrderDto? OrderDto { get; set; }
+
+        [BindProperty]
+        public long SelectedShippingMethodId { get; set; }
+
+        public List<ShippingMethod> ShippingMethods { get; set; } = new();
 
         public async Task OnGet()
         {
@@ -31,13 +38,47 @@ namespace Eshop.RazorPage.Pages
             {
                 OrderDto = _shopCartCookieManager.GetShopCart();
             }
+
+            ShippingMethods = await _orderService.GetShippingMethods();
+            SelectedShippingMethodId = OrderDto?.ShippingMethod?.Id ?? 0;
+        }
+
+        public async Task<IActionResult> OnPostSelectShippingMethod()
+        {
+            var methods = await _orderService.GetShippingMethods();
+            var selected = methods.FirstOrDefault(m => m.Id == SelectedShippingMethodId);
+
+            if (selected == null)
+                return new JsonResult(ApiResult.Error("روش ارسال معتبر نیست"));
+
+            if (User.Identity.IsAuthenticated)
+            {
+                OrderDto = await _orderService.GetCurrentOrder();
+                if (OrderDto == null)
+                    return new JsonResult(ApiResult.Error("سفارش یافت نشد"));
+
+                OrderDto.ShippingMethod = selected;
+            }
+            else
+            {
+                _shopCartCookieManager.SetShippingMethod(selected);
+                OrderDto = _shopCartCookieManager.GetShopCart();
+            }
+
+            return new JsonResult(new
+            {
+                Success = true,
+                Message = "روش ارسال با موفقیت انتخاب شد",
+                ShippingCost = selected.ShippingCost,
+                TotalPrice = OrderDto?.TotalPrice
+            });
         }
 
         public async Task<IActionResult> OnPostDeleteItem(long id)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return await AjaxTryCatch(() => _orderService.DeleteOrderItem(new DeleteOrderItemCommand()
+                return await AjaxTryCatch(() => _orderService.DeleteOrderItem(new DeleteOrderItemCommand
                 {
                     OrderItemId = id,
                 }));
@@ -56,7 +97,7 @@ namespace Eshop.RazorPage.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                return await AjaxTryCatch(() => _orderService.IncreaseOrderItem(new IncreaseOrderItemCountCommand()
+                return await AjaxTryCatch(() => _orderService.IncreaseOrderItem(new IncreaseOrderItemCountCommand
                 {
                     Count = 1,
                     UserId = User.GetUserId(),
@@ -77,7 +118,7 @@ namespace Eshop.RazorPage.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                return await AjaxTryCatch(() => _orderService.DecreaseOrderItem(new DecreaseOrderItemCountCommand()
+                return await AjaxTryCatch(() => _orderService.DecreaseOrderItem(new DecreaseOrderItemCountCommand
                 {
                     Count = 1,
                     UserId = User.GetUserId(),
@@ -98,7 +139,7 @@ namespace Eshop.RazorPage.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                return await AjaxTryCatch(() => _orderService.AddOrderItem(new AddOrderItemCommand()
+                return await AjaxTryCatch(() => _orderService.AddOrderItem(new AddOrderItemCommand
                 {
                     UserId = User.GetUserId(),
                     InventoryId = inventoryId,

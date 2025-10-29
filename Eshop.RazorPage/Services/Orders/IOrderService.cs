@@ -2,6 +2,7 @@
 using Eshop.RazorPage.Models.Orders;
 using Eshop.RazorPage.Models.Orders.Command;
 using Shop.Query.Orders.DTOs;
+using System.ComponentModel;
 
 namespace Eshop.RazorPage.Services.Orders
 {
@@ -18,5 +19,6 @@ namespace Eshop.RazorPage.Services.Orders
         Task<OrderDto?> GetCurrentOrder();
         Task<OrderFilterResult> GetOrders(OrderFilterParams filterParams);
         Task<OrderFilterResult> GetUserOrders(int pageId, int take, OrderStatus? orderStatus);
+        Task<List<ShippingMethod>> GetShippingMethods();
     }
 }

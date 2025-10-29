@@ -15,6 +15,7 @@ namespace Shop.Query.Orders.DTOs
         public OrderStatus Status { get; set; }
         public OrderDiscount? Discount { get; set; }
         public OrderAddress? Address { get; set; }
+        public long? ShippingMethodId { get; set; }
         public ShippingMethod? ShippingMethod { get; set; }
         public List<OrderItemDto> Items { get; set; }
         public DateTime? LastUpdate { get; set; }
