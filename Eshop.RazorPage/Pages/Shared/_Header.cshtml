@@ -1,7 +1,10 @@
 ﻿@using Eshop.RazorPage.Services.Categories
+@using Eshop.RazorPage.Services.Users
 @inject ICategoryService _CategoryService
+@inject IUserService _UserService
 @{
     var categories = await _CategoryService.GetCategories();
+    var user = await _UserService.GetCurrentUser();
 }
 <header class="page-header">
     <div class="top-page-header">
@@ -69,20 +72,20 @@
                         <i class="fal fa-user-circle"></i>
                         ورود و عضویت
                     </a> -->
-                    <a href="#">
-                        جلال بهرامی راد
+                    <a href="/profile">
+                        @($"{user.Name} {user.Family}")
                         <i class="fad fa-chevron-down text-sm mr-1"></i>
                     </a>
                     <ul class="dropdown--wrapper">
                         <li class="header-profile-dropdown-account-container">
-                            <a href="#" class="d-block">
+                            <a href="/profile" class="d-block">
                                 <span class="header-profile-dropdown-user">
                                     <span class="header-profile-dropdown-user-img">
                                         <img src="./assets/images/avatar/avatar.png">
                                     </span>
                                     <span class="header-profile-dropdown-user-info">
                                         <p class="header-profile-dropdown-user-name">
-                                            جلال بهرامی راد
+                                            @($"{user.Name} {user.Family}")
                                         </p>
                                         <span class="header-profile-dropdown-user-profile-link">
                                             مشاهده حساب
@@ -101,21 +104,24 @@
                                 </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#" class="dropdown--btn-primary">وارد شوید</a>
-                        </li>
-                        <li>
-                            <span>کاربر جدید هستید؟</span>
-                            <a href="#" class="border-bottom-dt">ثبت نام</a>
-                        </li>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li>
+                                <a href="/auth/login" class="dropdown--btn-primary">وارد شوید</a>
+                            </li>
+                            <li>
+                                <span>کاربر جدید هستید؟</span>
+                                <a href="/auth/register" class="border-bottom-dt">ثبت نام</a>
+                            </li>
+                        }
                         <hr>
                         <li>
-                            <a href="#">
+                            <a href="/profile">
                                 پروفایل
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="/profile/orders">
                                 پیگیری سفارش
                             </a>
                         </li>
